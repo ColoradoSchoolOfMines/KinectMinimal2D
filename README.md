@@ -20,24 +20,40 @@ Requirements
 Modifying the Project
 ===============
 ## Responding to Data From Kinect
-The ```Sensor[XXX]FrameReady``` functions are registered as event handlers in the ```WindowLoaded``` function.
+The ```Sensor[XXX]FrameReady``` functions are registered as event handlers in the ```WindowLoaded``` function. Not all event handlers need to be registered if they are not used. Any event handler which is used needs the corresponding stream activated on the sensor.
+```C#
+
+// Turn on the proper streams to receive event frames
+// Disable lines for event streams you are not using
+this.sensor.SkeletonStream.Enable();
+this.sensor.ColorStream.Enable();
+this.sensor.DepthStream.Enable();
+
+// Add an event handlers to be called whenever there is new color frame data
+// Disable event handler registrations for events you are not using
+this.sensor.SkeletonFrameReady += this.SensorSkeletonFrameReady;
+this.sensor.ColorFrameReady += this.SensorColorFrameReady;
+this.sensor.DepthFrameReady += this.SensorDepthFrameReady;
+this.sensor.AllFramesReady += this.SensorAllFramesReady; // Needs all three streams active!
+```
+
 Any time the Kinect has a frame of the proper type ready, it will call the event handler registered to that frame type.
-You can then use the data from the ```EventArgs``` to update variables that will be used for gameplay, drawing, etc.
+You can then use the data from the ```[XXX]EventArgs``` function argument to update variables that will be used for gameplay, drawing, etc.
 
 ## Drawing On Screen
-Inside of any of the [XXX]FrameReady event handlers, acquire a ```DrawingContext``` thus:
+Inside of any of the ```[XXX]FrameReady``` event handlers, acquire a ```DrawingContext``` thus:
 ```C#
 using (DrawingContext dc = this.drawingGroup.Open())
 {
   // ... call methods on dc
 }
 ```
-inside the using block, you can put logic to draw something to the screen every time a particular type of frame is ready.
+Inside the using block, you can put logic to draw something to the screen every time a particular type of frame is ready.
 
 Be aware that having draw steps in multiple FrameReady handlers can have undesirable effects with conflicting or overlapping output!
 
 ## Drawing With Colors, Brushes, and Pens
-Microsoft provides [good documentation](http://msdn.microsoft.com/en-us/library/aa983677(v=vs.71).aspx) on the differences between these. When using these, it is recommended that you keep them as member variables on classes using them. Given a reference to a Color, Brush, or Pen, draw calls can be used:
+Microsoft provides [good documentation](http://msdn.microsoft.com/en-us/library/aa983677(v=vs.71).aspx) on the differences between these. When using them, it is recommended that you keep them as member variables on classes using them. Given a reference to a Color, Brush, or Pen, draw calls can be used:
 ```C#
   DrawingContext drawingContext = getDrawingContext();
   drawingContext.rect(fillbrush, outlinePen, new Rectangle(x, y, w, h), irrelevantAnimationsObj);
