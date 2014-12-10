@@ -127,3 +127,7 @@ private void SensorColorFrameReady(object s, ColorFrameEventArgs e)
 }
 ```
 Conceptually, this would result in circular cutouts of the the user's joints using actual video data.
+
+## More Advanced Topics
+
+Reference [the wiki](https://github.com/ColoradoSchoolOfMines/KinectMinimal2D/wiki) for more information.
