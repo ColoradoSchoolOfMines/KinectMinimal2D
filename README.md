@@ -48,15 +48,17 @@ using (DrawingContext dc = this.drawingGroup.Open())
   // ... call methods on dc
 }
 ```
-Inside the using block, you can put logic to draw something to the screen every time a particular type of frame is ready.
+Inside the using block, you can put logic to draw something to the screen every time a particular type of frame is ready. [Microsoft's documentation](http://msdn.microsoft.com/en-us/library/system.windows.media.drawingcontext%28v=vs.110%29.aspx) for the available functions on the DrawingContext object demonstrate the breadth of capabilities available.
 
 Be aware that having draw steps in multiple FrameReady handlers can have undesirable effects with conflicting or overlapping output!
 
 ## Drawing With Colors, Brushes, and Pens
 Microsoft provides [good documentation](http://msdn.microsoft.com/en-us/library/aa983677(v=vs.71).aspx) on the differences between these. When using them, it is recommended that you keep them as member variables on classes using them. Given a reference to a Color, Brush, or Pen, draw calls can be used:
 ```C#
-  DrawingContext drawingContext = getDrawingContext();
-  drawingContext.rect(fillbrush, outlinePen, new Rectangle(x, y, w, h), irrelevantAnimationsObj);
+using (DrawingContext dc = this.drawingGroup.Open())
+{
+  drawingContext.DrawRectangle(fillbrush, outlinePen, new Rectangle(x, y, w, h));
+}
 ```
 
 Also, these objects can be constructed from one another thusly:
